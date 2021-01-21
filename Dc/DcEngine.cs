@@ -108,21 +108,21 @@ namespace Dc
         {
             foreach (var m in typeof (Math).GetMethods (System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static))
             {
-                if (String.Equals (lexem.Text, m.Name, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    if (m.ReturnType != typeof (double))
+                if (!String.Equals(lexem.Text, m.Name, StringComparison.InvariantCultureIgnoreCase)) 
+                    continue;
+                
+                if (m.ReturnType != typeof (double))
+                    continue;
+                var paras = m.GetParameters ();
+                foreach (var para in paras)
+                    if (para.ParameterType != typeof (double))
                         continue;
-                    var paras = m.GetParameters ();
-                    foreach (var para in paras)
-                        if (para.ParameterType != typeof (double))
-                            continue;
-                    Needs (paras.Length);
-                    var p = new object[paras.Length];
-                    for (var i = p.Length - 1; i >= 0; i--)
-                        p[i] = Stack.Pop ();
-                    Stack.Push ((double)m.Invoke (null, p));
-                    return;
-                }
+                Needs (paras.Length);
+                var p = new object[paras.Length];
+                for (var i = p.Length - 1; i >= 0; i--)
+                    p[i] = Stack.Pop ();
+                Stack.Push ((double)m.Invoke (null, p));
+                return;
             }
 
             foreach (var f in typeof (Math).GetFields (System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static))
