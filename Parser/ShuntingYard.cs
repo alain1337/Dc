@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,13 +22,11 @@ namespace Parser
             Grammar = new List<GrammarRule> ();
         }
 
-        public void Execute (List<Lexem> lexemInput, IEngine engine)
+        public void Execute (IEnumerable<Lexem> lexemInput, IEngine engine)
         {
-            var input = new List<RuleMatch> ();
-            foreach (var lexem in lexemInput)
-                input.Add (Match (lexem));
-            if (Preprocessor != null)
-                Preprocessor (input);
+            var input = lexemInput.Select(Match).ToList();
+            
+            Preprocessor?.Invoke (input);
 
             var stack = new Stack<RuleMatch> ();
             foreach (var rm in input)
@@ -98,9 +97,7 @@ namespace Parser
 
         public RuleMatch Match (Lexem lexem)
         {
-            var rule = Grammar.Find ((r) => { return r.IsMatch (lexem); });
-            if (rule == null)
-                throw new GrammarException ("No rule for lexem " + lexem, lexem);
+            var rule = Grammar.Find (r => r.IsMatch (lexem)) ?? throw new GrammarException ("No rule for lexem " + lexem, lexem);
             return new RuleMatch (lexem, rule);
         }
     }
@@ -108,7 +105,7 @@ namespace Parser
     public class RuleMatch
     {
         public Lexem Lexem { get; }
-        public GrammarRule Rule { get; set; }
+        public GrammarRule Rule { get; }
 
         public RuleMatch (Lexem lexem, GrammarRule rule)
         {
