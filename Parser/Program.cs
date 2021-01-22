@@ -90,7 +90,7 @@ namespace Parser
         }
     }
 
-    abstract class Kinds : KindsBase
+    internal abstract class Kinds : KindsBase
     {
         public const int Value = 1;
         public const int Operator = 2;

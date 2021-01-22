@@ -7,7 +7,7 @@ using Parser;
 
 namespace Dc
 {
-    class DcEngine : IEngine
+    internal class DcEngine : IEngine
     {
         public Stack<double> Stack { get; }
         public DcFunctions Functions { get; } = new DcFunctions();

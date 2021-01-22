@@ -61,7 +61,7 @@ namespace Dc
             return result;
         }
 
-        private void Preprocess(List<RuleMatch> rules)
+        void Preprocess(List<RuleMatch> rules)
         {
             RuleMatch prevRule = null;
             for (var i = 0; i < rules.Count; i++)
