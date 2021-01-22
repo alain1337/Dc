@@ -10,6 +10,7 @@ namespace Dc
     class DcEngine : IEngine
     {
         public Stack<double> Stack { get; }
+        public DcFunctions Functions { get; } = new DcFunctions();
 
         public DcEngine()
         {
@@ -79,7 +80,7 @@ namespace Dc
                     break;
 
                 case Kinds.Identifier:
-                    ExecFunction(lexem);
+                    Functions.Execute(lexem.Text, Stack);
                     break;
 
                 default:
@@ -95,51 +96,13 @@ namespace Dc
 
         double Fac(double n)
         {
-            if (n != Math.Floor(n))
+            if (Math.Abs(n - Math.Floor(n)) > Double.Epsilon)
                 throw new InvalidOperationException("! needs a integer argument");
 
             if (n < 3)
                 return n;
             else
                 return n * Fac(n - 1);
-        }
-
-        void ExecFunction(Lexem lexem)
-        {
-            foreach (var m in typeof(Math).GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static))
-            {
-                if (!String.Equals(lexem.Text, m.Name, StringComparison.InvariantCultureIgnoreCase))
-                    continue;
-
-                if (m.ReturnType != typeof(double))
-                    continue;
-                var paras = m.GetParameters();
-
-                // HACK: Quick fix for log(x) vs. log(x,y)
-                if (String.Equals(lexem.Text, "log", StringComparison.OrdinalIgnoreCase) && paras.Length > 1)
-                    continue;
-
-                foreach (var para in paras)
-                    if (para.ParameterType != typeof(double))
-                        continue;
-                Needs(paras.Length);
-                var p = new object[paras.Length];
-                for (var i = p.Length - 1; i >= 0; i--)
-                    p[i] = Stack.Pop();
-                Stack.Push((double)m.Invoke(null, p));
-                return;
-            }
-
-            foreach (var f in typeof(Math).GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static))
-            {
-                if (String.Equals(lexem.Text, f.Name, StringComparison.InvariantCultureIgnoreCase) && typeof(double) == f.FieldType)
-                {
-                    Stack.Push((double)f.GetValue(null));
-                    return;
-                }
-            }
-
-            throw new NotImplementedException("Function " + lexem.Text + " not implemented");
         }
     }
 }

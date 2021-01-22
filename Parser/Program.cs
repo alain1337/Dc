@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Parser
 {
-    class Program
+    internal static class Program
     {
         static void Main (string[] args)
         {
@@ -75,22 +75,18 @@ namespace Parser
 
         static List<GrammarRule> CreateGrammar ()
         {
-            var grammar = new List<GrammarRule> ();
-
-            grammar.Add (new GrammarRule ("+", Kinds.Operator, GrammarTokenType.Operator, 2, GrammarTokenAssociativity.Left, 2));
-            grammar.Add (new GrammarRule ("-", Kinds.Operator, GrammarTokenType.Operator, 2, GrammarTokenAssociativity.Left, 2));
-
-            grammar.Add (new GrammarRule ("*", Kinds.Operator, GrammarTokenType.Operator, 3, GrammarTokenAssociativity.Left, 2));
-            grammar.Add (new GrammarRule ("/", Kinds.Operator, GrammarTokenType.Operator, 3, GrammarTokenAssociativity.Left, 2));
-
-            grammar.Add (new GrammarRule (null, Kinds.Value, GrammarTokenType.Value, 0));
-
-            grammar.Add (new GrammarRule (null, Kinds.Identifier, GrammarTokenType.Function, 0));
-            grammar.Add (new GrammarRule ("(", Kinds.Operator, GrammarTokenType.LeftParenthesis, 0));
-            grammar.Add (new GrammarRule (")", Kinds.Operator, GrammarTokenType.RightParenthesis, 0));
-            grammar.Add (new GrammarRule (",", Kinds.Operator, GrammarTokenType.Separator, 0));
-
-            return grammar;
+            return new List<GrammarRule>
+            {
+                new GrammarRule("+", Kinds.Operator, GrammarTokenType.Operator, 2, GrammarTokenAssociativity.Left, 2),
+                new GrammarRule("-", Kinds.Operator, GrammarTokenType.Operator, 2, GrammarTokenAssociativity.Left, 2),
+                new GrammarRule("*", Kinds.Operator, GrammarTokenType.Operator, 3, GrammarTokenAssociativity.Left, 2),
+                new GrammarRule("/", Kinds.Operator, GrammarTokenType.Operator, 3, GrammarTokenAssociativity.Left, 2),
+                new GrammarRule(null, Kinds.Value, GrammarTokenType.Value, 0),
+                new GrammarRule(null, Kinds.Identifier, GrammarTokenType.Function, 0),
+                new GrammarRule("(", Kinds.Operator, GrammarTokenType.LeftParenthesis, 0),
+                new GrammarRule(")", Kinds.Operator, GrammarTokenType.RightParenthesis, 0),
+                new GrammarRule(",", Kinds.Operator, GrammarTokenType.Separator, 0)
+            };
         }
     }
 

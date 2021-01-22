@@ -67,10 +67,7 @@ namespace Parser
         public Type ValueType { get; }
         public int Kind { get; }
 
-        public LexRule (string regexp, Type type, int kind)
-            : this (regexp, type, kind, true) { }
-
-        public LexRule (string regexp, Type type, int kind, bool capturing)
+        public LexRule (string regexp, Type type, int kind, bool capturing = true)
         {
             Pattern = regexp;
             Regex = new Regex ("^(" + Pattern + ")");
@@ -79,13 +76,7 @@ namespace Parser
             Kind = kind;
         }
 
-        public static LexRule SpaceSkipper
-        {
-            get
-            {
-                return new LexRule (@"\s+", null, 0, false);
-            }
-        }
+        public static LexRule SpaceSkipper => new LexRule (@"\s+", null, 0, false);
     }
 
     [Serializable]
