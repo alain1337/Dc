@@ -9,18 +9,11 @@ namespace Dc
 {
     internal static class Program
     {
-        static void Main (string[] args)
+        static void Main(string[] args)
         {
-            var sb = new StringBuilder ();
-            for (var i = 0; i < args.Length; i++)
-            {
-                if (i > 0)
-                    sb.Append (' ');
-                sb.Append (args[i]);
-            }
-
-            var dc = new Dc ();
-            Console.WriteLine ("{0:r}", dc.Calc (sb.ToString ()));
+            var dc = new Dc();
+            var str = String.Join(" ", args);
+            Console.WriteLine($"{str} => {dc.Calc(str)}");
         }
     }
 
